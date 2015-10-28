@@ -10,6 +10,7 @@ module.exports = {
     var me = game_state.players[ myIndex ];
 
     var ranks = [ 'A', 'K', 'Q', 'J', '10' ];
+    var suitedKickers = [ 'A', 'K' ];
     var suitedRanks = ranks.concat([ '9', '8', '7' ]);
 
     // Very basic initial play... all-in pre-flop for any 2 cards of any suit
@@ -20,6 +21,13 @@ module.exports = {
         (
           ranks.indexOf(me.hole_cards[ 0 ].rank) > -1 && 
           ranks.indexOf(me.hole_cards[ 1 ].rank) > -1
+        ) ||
+        (
+          me.hole_cards[ 0 ].suit === me.hole_cards[ 1 ].suit &&
+          ( 
+            suitedKickers.indexOf(me.hole_cards[ 0 ].rank) > -1 ||
+            suitedKickers.indexOf(me.hole_cards[ 1 ].rank) > -1
+          )
         ) ||
         me.hole_cards[ 0 ].rank === me.hole_cards[ 1 ].rank
       )
