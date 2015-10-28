@@ -8,7 +8,7 @@ function isAK( card ) {
 
 function shouldPlay( card1, card2 ) {
 
-  if ( ranks.indexOf(card1.rank) && ranks.indexOf(card2.rank) ) {
+  if ( ranks.indexOf(card1.rank) > -1 && ranks.indexOf(card2.rank) > -1 ) {
     return true;
   }
 
