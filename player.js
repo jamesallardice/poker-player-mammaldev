@@ -16,7 +16,7 @@ module.exports = {
     // Very basic initial play... all-in pre-flop for any 2 cards of any suit
     // in the above array.
     if ( 
-      game_state.round === 0 && 
+      game_state.current_buy_in < me.stack / 10 && 
       (
         (
           ranks.indexOf(me.hole_cards[ 0 ].rank) > -1 && 
