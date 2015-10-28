@@ -1,39 +1,39 @@
 var unirest = require('unirest');
 
-var ranks = [ 'A', 'K', 'Q', 'J', '10' ];
-
-function isAK( card ) {
-  return card.rank === 'A' || card.rank === 'K';
-}
-
-function shouldPlay( card1, card2 ) {
-
-  if ( ranks.indexOf(card1.rank) > -1 && ranks.indexOf(card2.rank) > -1 ) {
-    return true;
-  }
-
-  if ( card1.rank === card2.rank ) {
-    return true;
-  }
-
-  if ( card1.suit === card2.suit ) {
-    if ( isAK(card1) || isAK(card2) ) {
-      return true;
-    }
-  }
-
-  return false;
-}
-
-function isPreFlop( state ) {
-  return !state.community_cards || state.community_cards.length === 0;
-}
-
 module.exports = {
 
   VERSION: "Default JavaScript folding player",
 
   bet_request: function(game_state, bet) {
+
+    var ranks = [ 'A', 'K', 'Q', 'J', '10' ];
+    
+    function isAK( card ) {
+      return card.rank === 'A' || card.rank === 'K';
+    }
+
+    function shouldPlay( card1, card2 ) {
+
+      if ( ranks.indexOf(card1.rank) > -1 && ranks.indexOf(card2.rank) > -1 ) {
+        return true;
+      }
+
+      if ( card1.rank === card2.rank ) {
+        return true;
+      }
+
+      if ( card1.suit === card2.suit ) {
+        if ( isAK(card1) || isAK(card2) ) {
+          return true;
+        }
+      }
+
+      return false;
+    }
+
+    function isPreFlop( state ) {
+      return !state.community_cards || state.community_cards.length === 0;
+    }
 
     var myIndex = game_state.in_action;
     var me = game_state.players[ myIndex ];
