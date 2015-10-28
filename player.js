@@ -16,56 +16,75 @@ module.exports = {
     // in the above array.
     if ( 
       game_state.round === 0 && 
-      ranks.indexOf(me.hole_cards[ 0 ].rank) > -1 && 
-      ranks.indexOf(me.hole_cards[ 1 ].rank) > -1
+      ( 
+        (
+          ranks.indexOf(me.hole_cards[ 0 ].rank) > -1 && 
+          ranks.indexOf(me.hole_cards[ 1 ].rank) > -1
+        ) ||
+        (
+          me.hole_cards[ 0 ].suit === me.hole_cards[ 1 ].suit
+        )
+      )
     ) {
       return bet(me.stack);
     }
 
-    // Try some all-ins with ace-high.
-    if ( me.hole_cards[ 0 ].rank === 'A' || me.hole_cards[ 1 ] === 'A' ) {
-      return bet(me.stack);
-    }
+    // // Try some all-ins with ace-high.
+    // if ( me.hole_cards[ 0 ].rank === 'A' || me.hole_cards[ 1 ] === 'A' ) {
+    //   return bet(me.stack);
+    // }
 
-    // Bet a bit less for suited connecters.
-    if (
-      game_state.round === 0 &&
-      me.hole_cards[ 0 ].suit === me.hole_cards[ 1 ].suit &&
-      suitedRanks.indexOf(me.hole_cards[ 0 ].rank) > -1 &&
-      suitedRanks.indexOf(me.hole_cards[ 1 ].rank) > -1
-    ) {
-      return bet(me.stack / 10);
-    }
+    // // Bet a bit less for suited cards.
+    // if (
+    //   game_state.round === 0 &&
+    //   me.hole_cards[ 0 ].suit === me.hole_cards[ 1 ].suit //&&
+    //   // suitedRanks.indexOf(me.hole_cards[ 0 ].rank) > -1 &&
+    //   // suitedRanks.indexOf(me.hole_cards[ 1 ].rank) > -1
+    // ) {
+    //   return bet(me.stack / 10);
+    // }
 
-    // If we are through to the flop...
-    if ( game_state.round > 0 && game_state.community_cards ) {
-      var cards = me.hole_cards.concat(game_state.community_cards);
-      unirest.get('http://rainman.leanpoker.org/rank')
-      .field('cards', JSON.stringify(cards))
-      .end(function ( res ) {
+    // // If we are through to the flop...
+    // if ( game_state.round > 0 && game_state.community_cards ) {
+    //   var cards = me.hole_cards.concat(game_state.community_cards);
+    //   unirest.get('http://rainman.leanpoker.org/rank')
+    //   .field('cards', JSON.stringify(cards))
+    //   .end(function ( res ) {
 
-        var result;
-        try {
-          result = JSON.parse(res.body);
-        } catch ( e ) {
+    //     var result;
+    //     try {
+    //       result = JSON.parse(res.body);
+    //     } catch ( e ) {
 
-          // Something went wrong... check or fold.
-          return bet(0);
-        }
+    //       // Something went wrong... check or fold.
+    //       return bet(0);
+    //     }
 
-        // Hit something... (at least 2 pair).
-        if ( result.rank > 1 ) {
-          return bet(me.stack);
-        } 
+    //     // Hit something... (at least 2 pair).
+    //     if ( result.rank > 1 ) {
+    //       return bet(me.stack);
+    //     } 
 
-        // Got nothing, fold/check.
-        return bet(0);
-      })
-    } else {
+    //     // Flop flush-draw.
+    //     if ( game_state.round === 1 ) {
+    //       if ( 
+    //         me.hole_cards[ 0 ].suit === me.hole_cards[ 1 ].suit &&
+    //         game_state.community_cards.filter(function ( card ) {
+    //           return card.suit === me.hole_cards[ 0 ].suit;
+    //         }).length > 1
+    //       ) {
+    //         return bet(me.stack);
+    //       }
+    //     }
+
+    //     // Got nothing, fold/check.
+    //     return bet(0);
+    //   })
+    // } else {
 
       // Otherwise fold.
       bet(0);
-    }
+    // }
 
   },
 
