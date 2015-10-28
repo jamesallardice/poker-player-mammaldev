@@ -8,8 +8,8 @@ module.exports = {
 
     var ranks = [ 'A', 'K', 'Q', 'J', '10' ];
     
-    function isAK( card ) {
-      return card.rank === 'A' || card.rank === 'K';
+    function isAKQ( card ) {
+      return card.rank === 'A' || card.rank === 'K' || card.rank === 'Q';
     }
 
     function shouldPlay( card1, card2 ) {
@@ -27,7 +27,7 @@ module.exports = {
       }
 
       if ( card1.suit === card2.suit ) {
-        if ( isAK(card1) || isAK(card2) ) {
+        if ( isAKQ(card1) || isAKQ(card2) ) {
           return true;
         }
       }
