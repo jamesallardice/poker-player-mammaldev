@@ -48,7 +48,7 @@ module.exports = {
     }
 
     // Always raise the BB if we are SB and it hasn't been raised yet.
-    var isSmallBlind = ( game_state.dealer + 1 ) % game_state.players.length === myIndex;
+    var isSmallBlind = isPreFlop && ( game_state.dealer + 1 ) % game_state.players.length === myIndex;
     if ( isPreFlop && !shouldPlay && isSmallBlind ) {
 
       if ( game_state.pot === 0 || game_state.pot < game_state.small_blind * 2 + 1 ) {
