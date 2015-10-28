@@ -16,18 +16,13 @@ module.exports = {
     // in the above array.
     if ( 
       game_state.round === 0 && 
-      ( 
-        (
-          ranks.indexOf(me.hole_cards[ 0 ].rank) > -1 && 
-          ranks.indexOf(me.hole_cards[ 1 ].rank) > -1
-        ) ||
-        (
-          me.hole_cards[ 0 ].suit === me.hole_cards[ 1 ].suit
-        )
-      )
+      ranks.indexOf(me.hole_cards[ 0 ].rank) > -1 && 
+      ranks.indexOf(me.hole_cards[ 1 ].rank) > -1
     ) {
       return bet(me.stack);
     }
+
+    bet(0);
 
     // // Try some all-ins with ace-high.
     // if ( me.hole_cards[ 0 ].rank === 'A' || me.hole_cards[ 1 ] === 'A' ) {
@@ -83,7 +78,7 @@ module.exports = {
     // } else {
 
       // Otherwise fold.
-      bet(0);
+      // bet(0);
     // }
 
   },
