@@ -38,16 +38,56 @@ module.exports = {
     var myIndex = game_state.in_action;
     var me = game_state.players[ myIndex ];
 
-    // Very basic initial play... all-in pre-flop for any 2 cards of any suit
-    // in the above array.
-    if ( 
-      isPreFlop(game_state) && 
-      shouldPlay(me.hole_cards[ 0 ], me.hole_cards[ 1 ])
-    ) {
+    var isPreFlop = isPreFlop(game_state);
+    var shouldPlay = shouldPlay(me.hole_cards[ 0 ], me.hole_cards[ 1 ]);
+
+    // All-in pre-flop for pockets, suited anything AK kicker, any 2 of A, K,
+    // Q, J, 10.
+    if ( isPreFlop && shouldPlay ) {
       return bet(me.stack);
     }
 
+    // Always raise the BB if we are SB and it hasn't been raised yet.
+    var isSmallBlind = ( game_state.dealer + 1 ) % game_state.players.length === myIndex;
+    if ( isPreFlop && !shouldPlay && isSmallBlind ) {
+
+      if ( game_state.pot === 0 || game_state.pot < game_state.small_blind * 2 + 1 ) {
+        // return bet(game_state.small_blind); // Just call the blind...
+        return bet(me.stack); // Ultra-aggressive
+        // return bet(game_state.small_blind * 8); // 4xBB
+      }
+    }
+
     bet(0);
+
+    // if ( !isPreFlop(game_state) ) {
+
+    //   var cards = me.hole_cards.concat(game_state.community_cards);
+    //   unirest.get('http://rainman.leanpoker.org/rank')
+    //   .field('cards', JSON.stringify(cards))
+    //   .end(function ( res ) {
+
+    //     var result;
+    //     try {
+    //       result = JSON.parse(res.body);
+    //     } catch ( e ) {
+
+    //       // Something went wrong... check or fold.
+    //       return bet(0);
+    //     }
+
+    //     // Hit something... (at least a pair).
+    //     if ( result.rank > 0 ) {
+    //       return bet(me.stack);
+    //     }
+
+    //     return bet(0);
+    //   });
+    // } else {
+
+    //   bet(0);
+    // }
+
 
     // // Try some all-ins with ace-high.
     // if ( me.hole_cards[ 0 ].rank === 'A' || me.hole_cards[ 1 ] === 'A' ) {
