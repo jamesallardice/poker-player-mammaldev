@@ -14,6 +14,10 @@ module.exports = {
 
     function shouldPlay( card1, card2 ) {
 
+      if ( card1.rank === 'A' || card2.rank === 'A' ) {
+        return true;
+      }
+
       if ( ranks.indexOf(card1.rank) > -1 && ranks.indexOf(card2.rank) > -1 ) {
         return true;
       }
