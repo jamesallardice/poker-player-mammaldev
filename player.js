@@ -22,6 +22,11 @@ module.exports = {
       return bet(me.stack);
     }
 
+    // Try some all-ins with ace-high.
+    if ( me.hole_cards[ 0 ].rank === 'A' || me.hole_cards[ 1 ] === 'A' ) {
+      return bet(me.stack);
+    }
+
     // Bet a bit less for suited connecters.
     if (
       game_state.round === 0 &&
