@@ -16,8 +16,13 @@ module.exports = {
     // in the above array.
     if ( 
       game_state.round === 0 && 
-      ranks.indexOf(me.hole_cards[ 0 ].rank) > -1 && 
-      ranks.indexOf(me.hole_cards[ 1 ].rank) > -1
+      (
+        (
+          ranks.indexOf(me.hole_cards[ 0 ].rank) > -1 && 
+          ranks.indexOf(me.hole_cards[ 1 ].rank) > -1
+        ) ||
+        me.hole_cards[ 0 ].rank === me.hole_cards[ 1 ].rank
+      )
     ) {
       return bet(me.stack);
     }
