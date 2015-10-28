@@ -1,5 +1,34 @@
 var unirest = require('unirest');
 
+var ranks = [ 'A', 'K', 'Q', 'J', '10' ];
+
+function isAK( card ) {
+  return card.rank === 'A' || card.rank === 'K';
+}
+
+function shouldPlay( card1, card2 ) {
+
+  if ( ranks.indexOf(card1.rank) && ranks.indexOf(card2.rank) ) {
+    return true;
+  }
+
+  if ( card1.rank === card2.rank ) {
+    return true;
+  }
+
+  if ( card1.suit === card2.suit ) {
+    if ( isAK(card1) || isAK(card2) ) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+function isPreFlop( state ) {
+  return !state.community_cards || state.community_cards.length === 0;
+}
+
 module.exports = {
 
   VERSION: "Default JavaScript folding player",
@@ -9,31 +38,11 @@ module.exports = {
     var myIndex = game_state.in_action;
     var me = game_state.players[ myIndex ];
 
-    var ranks = [ 'A', 'K', 'Q', 'J', '10' ];
-    var suitedKickers = [ 'A', 'K' ];
-    var suitedRanks = ranks.concat([ '9', '8', '7' ]);
-
     // Very basic initial play... all-in pre-flop for any 2 cards of any suit
     // in the above array.
     if ( 
-      (
-        !game_state.community_cards ||
-        game_state.community_cards.length === 0
-      ) &&
-      (
-        (
-          ranks.indexOf(me.hole_cards[ 0 ].rank) > -1 && 
-          ranks.indexOf(me.hole_cards[ 1 ].rank) > -1
-        ) ||
-        (
-          me.hole_cards[ 0 ].suit === me.hole_cards[ 1 ].suit &&
-          ( 
-            suitedKickers.indexOf(me.hole_cards[ 0 ].rank) > -1 ||
-            suitedKickers.indexOf(me.hole_cards[ 1 ].rank) > -1
-          )
-        ) ||
-        me.hole_cards[ 0 ].rank === me.hole_cards[ 1 ].rank
-      )
+      isPreFlop(game_state) && 
+      shouldPlay(me.hole_cards[ 0 ], me.hole_cards[ 1 ])
     ) {
       return bet(me.stack);
     }
